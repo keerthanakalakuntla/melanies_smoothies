@@ -1,5 +1,5 @@
 import streamlit as st
-from snowflake.snowpark.context import get_active_session
+
 from snowflake.snowpark.functions import col
 
 # Title and Description
@@ -11,7 +11,8 @@ name_on_order = st.text_input("Name on smoothie:")
 st.write("The Name on your Smoothie will be:", name_on_order)
 
 # Snowflake Session and Data Retrieval
-session = get_active_session()
+cnx = st.connection("snowflake")
+session = cnx.session()
 my_dataframe = session.table("smoothies.public.fruit_options").select(col('FRUIT_NAME'))
 
 # Extract fruit names into a list
