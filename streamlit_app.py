@@ -4,19 +4,6 @@ import requests
 smoothiefroot_response = requests.get("https://my.smoothiefroot.com/api/fruit/watermelon")
 st.text(smoothiefroot_response)
 
-import streamlit as st
-import requests
-
-st.write("Testing the `requests` library...")
-
-try:
-    response = requests.get("https://api.github.com")
-    st.write(f"GitHub API Status: {response.status_code}")
-    st.write("Response:", response.json())
-except Exception as e:
-    st.error(f"An error occurred: {e}")
-
-
 # Title and Description
 st.title(":cup_with_straw: Customize Your Smoothie! :cup_with_straw:")
 st.write("Choose the fruits you want in your custom smoothie!")
