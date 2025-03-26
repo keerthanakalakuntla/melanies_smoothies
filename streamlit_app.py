@@ -1,9 +1,6 @@
 import streamlit as st
 from snowflake.snowpark.functions import col
 import requests
-smoothiefroot_response = requests.get("https://my.smoothiefroot.com/api/fruit/watermelon")
-#st.text(smoothiefroot_response.json())
-sf_df = st.dataframe(data=smoothiefroot_response.json(), use_container_width=True)
 
 
 # Title and Description
@@ -29,7 +26,15 @@ ingredients_list = st.multiselect('Choose up to 5 ingredients:', fruit_list, max
 time_to_insert = False
 
 if ingredients_list:
-    ingredients_string = ', '.join(ingredients_list)
+    ingredients_string = ''
+
+    for fruit_chosen in ingredients_list:
+        ingredients_string += fruit_chosen + ' '
+
+        # Fetch API data for each fruit
+        smoothiefroot_response = requests.get(f"https://my.smoothiefroot.com/api/fruit/{fruit_chosen.lower()}")
+        sf_df = st.dataframe(data=smoothiefroot_response.json(), use_container_width=True)
+
     st.write("Selected Ingredients:", ingredients_list)
 
     # SQL Insert with parameterized query
@@ -42,5 +47,5 @@ if ingredients_list:
 
 # Execute the SQL query safely with parameterized query
 if time_to_insert:
-    session.sql(stmt, [ingredients_string, name_on_order]).collect()
+    session.sql(stmt, [ingredients_string.strip(), name_on_order]).collect()
     st.success(f'✅ Your Smoothie is ordered, {name_on_order}!')
